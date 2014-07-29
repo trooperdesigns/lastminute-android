@@ -25,15 +25,12 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class Login extends AsyncTask<String, Void, String> {
-	
-	private String email;
-	private String password;
+public class Logout extends AsyncTask<String, Void, String> {
+
 	private String localAccessToken;
 	
-	public Login (String email, String password){
-		this.email = email;
-		this.password = password;
+	public Logout (String localAccessToken){
+		this.localAccessToken = localAccessToken;
 	}
 
 	// network io cannot be done in main thread
@@ -41,7 +38,7 @@ public class Login extends AsyncTask<String, Void, String> {
 	protected String doInBackground(String... arg0) {
 
 		// post request w/ login info
-		this.localAccessToken = login(email, password);
+		this.localAccessToken = logout(localAccessToken);
 		
 		// get request for profile
 		//getProfile();
@@ -53,18 +50,17 @@ public class Login extends AsyncTask<String, Void, String> {
 		this.localAccessToken = result;
 	}
 
-	// login
-	public String login(String email, String password) {
+	// logout
+	public String logout(String accessToken){
 		HttpClient httpclient = new DefaultHttpClient();
 		
 		// change ip accordingly
-		HttpPost httppost = new HttpPost("http://192.168.0.117:3000/api/users/login");
+		HttpPost httppost = new HttpPost("http://192.168.0.117:3000/api/users/logout");
 
 		try {
 			// add header data
 			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-			nameValuePairs.add(new BasicNameValuePair("email", email));
-			nameValuePairs.add(new BasicNameValuePair("password", password));
+			nameValuePairs.add(new BasicNameValuePair("accessToken", accessToken));
 			httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
 			// Execute HTTP Post Request
@@ -79,14 +75,15 @@ public class Login extends AsyncTask<String, Void, String> {
 			
 			try {
 				JSONObject jsonObj = new JSONObject(res);
-				Log.i("success", "first: " + jsonObj.getString("id"));
-				String localAccessToken = jsonObj.getString("id");
-				return localAccessToken;
+				//Log.i("success", "first: " + jsonObj.getString("id"));
+				//String localAccessToken = jsonObj.getString("id");
+				//return localAccessToken;
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return null;
 			}
+			return "";
 			
 		} catch (ClientProtocolException cpe) {
 			cpe.printStackTrace();

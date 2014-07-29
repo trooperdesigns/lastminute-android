@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,7 +48,13 @@ public class MainActivity extends Activity {
 					if(login.get() != null){
 						Log.i("success", "result: " + login.get());
 						text = text + login.get();
+						localAccessToken = login.get();
 						
+						Intent goProfile = new Intent(getApplicationContext(), ProfileActivity.class);
+				        goProfile.putExtra("com.jc.strongloopauth", localAccessToken);
+				        startActivity(goProfile);
+				        
+				        //finish();
 						
 					} else {
 						text = "login unsuccessful";
@@ -71,6 +78,8 @@ public class MainActivity extends Activity {
 				toast.show();
 			}
 		});
+        
+        
     }
 
 
